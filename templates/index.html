@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bot.css') }}">
+    <script src="https://kit.fontawesome.com/f70334b4f8.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="botIcon">
+        <i id="open" class="fa-solid fa-comments open"></i>
+        <i id="close" class="fa-solid fa-xmark close"></i>
+    </div>
+    <section id="botBody">
+        <div id="BotHeader">
+            <div id="profileIcon"><img src="{{ url_for('static', filename='images/expressive-young-woman-posing-studio.jpg') }}" alt=""></div>
+            <div id="profileText">
+                <h5>Chat with Bot</h5>
+                <p>Lorem ipsum dolor sit amet.</p>
+                <!-- <i class="fa-solid fa-xmark"></i> -->
+            </div>
+        </div>
+
+        <div id="chat">
+            <div id="conversation" class="overflow-auto"></div>
+        </div>
+
+        <form id="chatForm"  action="/submit" method="post">
+            <input type="text" id="message" name="message" placeholder="Type your message..." autofocus>
+            <button  type="submit" value="Submit">Send</button>
+        </form>
+    </section>
+    <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
+
+    <script>
+        function sendMessage() {
+            var input = $('#message').val();
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: { message : input },
+                success: function(response) {
+                    $('#conversation').append('<div  class="message user-message">' + response.response + '</div><br>');
+                    $('#conversation').append('<div  class="message bot-message">' + response.replay + '</div>');
+                    $('#message').val(''); // clear the input field
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
